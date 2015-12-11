@@ -11,7 +11,7 @@ class MY_Controller extends CI_Controller
     public $pagerParams = array();
     public $totalRows = 0;
     public $pagerString = '';
-    public $pagerBootstrpString = '';
+    public $pagerBootstrapString = '';
 
     public function __construct()
     {
