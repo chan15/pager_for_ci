@@ -43,10 +43,12 @@ class MY_Model extends CI_Model
         $rows = $item->get($this->table);
 
         $query = $item->query('SELECT FOUND_ROWS() AS `count`');
-        $pagerParams['totalRows'] = $query->row()->count;
+        $totalRows = $query->row()->count;
+        $pagerParams['totalRows'] = $totalRows;
 
         return [
             'rows' => $rows->result(),
+            'total' => $totalRows,
             'pagerBootstrapString' => $this->pager->bootstrapPager($pagerParams),
             'pagerString' => $this->pager->pager($pagerParams),
         ];
@@ -64,8 +66,9 @@ class Welcome extends MY_Controller
         $this->load->library('pager');
         $this->load->helper('url');
         $this->load->model('Members', 'members', true);
-        $data['datas'] = $this->members->datas()['rows'];
-        $data['pagerString'] = $this->members->datas()['pagerString'];
+        $datas = $this->members->datas();
+        $data['datas'] = $datas['rows'];
+        $data['pagerString'] = $datas['pagerString'];
         $this->load->view('pager', $data);
     }
 }
