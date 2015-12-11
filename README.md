@@ -10,8 +10,6 @@ class MY_Controller extends CI_Controller
     public $pageLimit = 10;
     public $pagerParams = array();
     public $totalRows = 0;
-    public $pagerString = '';
-    public $pagerBootstrapString = '';
 
     public function __construct()
     {
