@@ -5,10 +5,10 @@ class Pager
     public $page = 0;
     public $totalPages = 0;
     public $actualPages = 0;
-    public $_langPrevPage = '上一頁';
-    public $_langFirstPage = '第一頁';
-    public $_langNextPage = '下一頁';
-    public $_langLastPage = '最後頁';
+    public $langPrevPage = 'prev page';
+    public $langFirstPage = 'first page';
+    public $langNextPage = 'next page';
+    public $langLastPage = 'last page';
 
     public function __construct()
     {
@@ -20,7 +20,6 @@ class Pager
         extract($params);
         $currentPage = current_url();
         $totalPages = ceil($totalRows / $rowSize) - 1;
-        $this->actualPages = $totalPages + 1;
         $limitLinksEndCount = $pageLimit;
         $temp = intval(($page + 1));
         $startLink = intval(max(1, $temp - intval($limitLinksEndCount / 2)));
@@ -126,7 +125,7 @@ class Pager
             case 'first':
                 if ($this->page > 0) {
                     if ($string === null) {
-                        $string = $this->_langFirstPage;
+                        $string = $this->langFirstPage;
                     }
 
                     $result = '<li><a href="'.sprintf('%s?page=%d%s',
@@ -139,7 +138,7 @@ class Pager
             case 'prev':
                 if ($this->page > 0) {
                     if ($string === null) {
-                        $string = $this->_langPrevPage;
+                        $string = $this->langPrevPage;
                     }
 
                     $result = '<li><a href="'.sprintf('%s?page=%d%s',
@@ -152,7 +151,7 @@ class Pager
             case 'next':
                 if ($this->page < $this->totalPages) {
                     if ($string === null) {
-                        $string = $this->_langNextPage;
+                        $string = $this->langNextPage;
                     }
 
                     $result = '<li><a href="'.sprintf('%s?page=%d%s',
@@ -165,7 +164,7 @@ class Pager
             case 'last':
                 if ($this->page < $this->totalPages) {
                     if ($string === null) {
-                        $string = $this->_langLastPage;
+                        $string = $this->langLastPage;
                     }
 
                     $result = '<li><a href="'.sprintf('%s?page=%d%s',
