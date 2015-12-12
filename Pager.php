@@ -3,21 +3,31 @@
 class Pager
 {
     public $page = 0;
+    public $totalRows = 0;
     public $totalPages = 0;
     public $actualPages = 0;
     public $langPrevPage = 'prev page';
     public $langFirstPage = 'first page';
     public $langNextPage = 'next page';
     public $langLastPage = 'last page';
+    public $pagerString = '';
+    public $pagerBootstrpString = '';
 
     public function __construct()
     {
         $this->ci =& get_instance();
     }
 
-    public function bootstrapPager($params = array())
+    public function init($params)
+    {
+        $this->bootstrapPager($params);
+        $this->pager($params);
+    }
+
+    public function bootstrapPager($params)
     {
         extract($params);
+        $this->totalRows = $totalRows;
         $currentPage = current_url();
         $totalPages = ceil($totalRows / $rowSize) - 1;
         $limitLinksEndCount = $pageLimit;
@@ -73,7 +83,7 @@ class Pager
 
         $pager .= '</ul>';
 
-        return $pager;
+        $this->pagerBootstrpString = $pager;
     }
 
     /**
@@ -86,12 +96,12 @@ class Pager
      *
      * @return string
      */
-    public function pager($params = array())
+    public function pager($params)
     {
         extract($params);
 
         if ($rowSize > $totalRows) {
-            return;
+            return '';
         }
 
         $this->page = $page;
@@ -104,7 +114,7 @@ class Pager
         $result .= $this->pageString('next', 'Next', 'next_select icon-arrow').$sep;
         $result .= $this->pageString('last', 'Last', 'last_select icon-arrowend').$sep;
 
-        return $result;
+        $this->pagerString = $result;
     }
 
     /**
