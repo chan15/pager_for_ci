@@ -9,7 +9,6 @@ class MY_Controller extends CI_Controller
     public $rowSize = 20;
     public $pageLimit = 10;
     public $pagerParams = array();
-    public $totalRows = 0;
 
     public function __construct()
     {
@@ -43,13 +42,9 @@ class MY_Model extends CI_Model
         $query = $item->query('SELECT FOUND_ROWS() AS `count`');
         $totalRows = $query->row()->count;
         $pagerParams['totalRows'] = $totalRows;
+        $this->pager->init($pagerParams);
 
-        return [
-            'rows' => $rows->result(),
-            'total' => $totalRows,
-            'pagerBootstrapString' => $this->pager->bootstrapPager($pagerParams),
-            'pagerString' => $this->pager->pager($pagerParams),
-        ];
+        return $rows->result();
     }
 }
 ```
@@ -61,12 +56,12 @@ class Welcome extends MY_Controller
 {
     public function index()
     {
+        $this->pagerParams['rowSize'] = 3;
         $this->load->library('pager');
         $this->load->helper('url');
         $this->load->model('Members', 'members', true);
         $datas = $this->members->datas();
-        $data['datas'] = $datas['rows'];
-        $data['pagerString'] = $datas['pagerString'];
+        $data['datas'] = $datas;
         $this->load->view('pager', $data);
     }
 }
@@ -102,8 +97,9 @@ class Members extends MY_Model
 <?php foreach ($datas as $data): ?>
 <div><?php echo $data->id; ?> <?php echo $data->name; ?></div>
 <?php endforeach ?>
+total: <?php echo $this->pager->totalRows; ?>
 <ul>
-<?php echo $pagerString; ?>
+<?php echo $this->pager->pagerString; ?>
 </ul>
 </body>
 </html>
