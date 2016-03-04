@@ -42,7 +42,7 @@ class Pager
         $this->bootstrapPager($pagerParams);
         $this->pager($pagerParams);
 
-        return $rows->result_array();
+        return $rows;
     }
 
     public function bootstrapPager($params)
