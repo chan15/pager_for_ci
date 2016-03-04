@@ -18,10 +18,31 @@ class Pager
         $this->ci =& get_instance();
     }
 
-    public function init($params)
+    public function pager_init($table, $query = null, $select = null)
     {
-        $this->bootstrapPager($params);
-        $this->pager($params);
+        $pagerParams = $this->ci->pagerParams;
+        $query->select('SQL_CALC_FOUND_ROWS *', false);
+
+        if ($select !== null) {
+            if (is_array($select)) {
+                foreach ($select as $key => $value) {
+                    $query->select($key, $value);
+                }
+            } else {
+                $query->select($select);
+            }
+        }
+
+        $query->limit($pagerParams['rowSize'], $pagerParams['page'] * $pagerParams['rowSize']);
+        $rows = $query->get($table);
+
+        $query = $query->query('SELECT FOUND_ROWS() AS `count`');
+        $totalRows = $query->row()->count;
+        $pagerParams['totalRows'] = $totalRows;
+        $this->bootstrapPager($pagerParams);
+        $this->pager($pagerParams);
+
+        return $rows->result_array();
     }
 
     public function bootstrapPager($params)
