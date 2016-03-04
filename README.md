@@ -22,33 +22,6 @@ class MY_Controller extends CI_Controller
 }
 ```
 
-###### application/core/MY_Model.php
-
-```php
-class MY_Model extends CI_Model
-{
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-    public function pager_init($item)
-    {
-        $pagerParams = $this->pagerParams;
-        $item->select('SQL_CALC_FOUND_ROWS *', false);
-        $item->limit($pagerParams['rowSize'], $pagerParams['page'] * $pagerParams['rowSize']);
-        $rows = $item->get($this->table);
-
-        $query = $item->query('SELECT FOUND_ROWS() AS `count`');
-        $totalRows = $query->row()->count;
-        $pagerParams['totalRows'] = $totalRows;
-        $this->pager->init($pagerParams);
-
-        return $rows->result();
-    }
-}
-```
-
 ###### application/controllers/Welcome.php
 
 ```php
@@ -78,9 +51,34 @@ class Members extends MY_Model
     {
         $this->db->where('id >', 1);
 
-        return $this->pager_init($this->db);
+        return $this->pager->pager_init($this->table, $this->db)->result_array();
     }
 }
+```
+
+If you want to do your own select here is the sample
+
+```php
+class Members extends MY_Model
+{
+    protected $table = 'members';
+
+    public function datas()
+    {
+        // Select straightly
+        $select = 'name AS the_name, column1, column2';
+        
+        // Select with MySQL function
+        $select = [
+            'name' => true,
+            'CONCAT(`column1`, `column2`) AS `new_column`' => false,
+            'SUM(`column`) AS `total`' => false
+        ];
+
+        return $this->pager->pager_init($this->table, $this->db, $select)->result_array();
+    }
+}
+
 ```
 
 ###### application/views/pager.php
