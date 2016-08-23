@@ -104,7 +104,7 @@ class Pager
 
         $pager .= '</ul>';
 
-        $this->pagerBootstrpString = $pager;
+        $this->pagerBootstrapString = $pager;
     }
 
     /**
