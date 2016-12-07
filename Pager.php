@@ -21,7 +21,7 @@ class Pager
     public function pager_init($table, $query = null, $select = null)
     {
         $pagerParams = $this->ci->pagerParams;
-        $query->select('SQL_CALC_FOUND_ROWS *', false);
+        $query->select("SQL_CALC_FOUND_ROWS {$table}.*", false);
 
         if ($select !== null) {
             if (is_array($select)) {
